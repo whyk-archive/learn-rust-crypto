@@ -1,7 +1,7 @@
 extern crate aes_gcm_siv;
 
 use aes_gcm_siv::aead::{Aead, NewAead};
-use aes_gcm_siv::{Aes256GcmSiv, Key, Nonce}; // Or `Aes128GcmSiv`
+use aes_gcm_siv::{Aes256GcmSiv, Key, Nonce};
 
 type SIV = aes_gcm_siv::aead::generic_array::GenericArray<
     u8,
@@ -34,9 +34,7 @@ pub fn encryptor(keyword: &str, nonces: &'static str, data: &str) -> Vec<u8> {
     let ciphertext = generated
         .0
         .encrypt(generated.1, data.as_bytes().as_ref())
-        .expect("encryption failure!"); // NOTE: handle this error to avoid panics!
-
-    println!("{:?}", ciphertext);
+        .expect("encryption failure!");
 
     ciphertext
 }
@@ -47,7 +45,7 @@ pub fn decryptor(keyword: &str, nonces: &'static str, ciphertext: Vec<u8>) -> St
     let plaintext = generated
         .0
         .decrypt(generated.1, ciphertext.as_ref())
-        .expect("decryption failure!"); // NOTE: handle this error to avoid panics!
+        .expect("decryption failure!");
 
     String::from_utf8(plaintext.to_vec()).unwrap()
 }
@@ -60,6 +58,5 @@ fn test_aes_crypto() {
     let ciphertext = encryptor(KEYWORD, NONCE, "plaintext message");
     let plaintext = decryptor(KEYWORD, NONCE, ciphertext);
 
-    println!("{}", plaintext);
     assert_eq!(&plaintext, "plaintext message");
 }
