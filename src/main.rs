@@ -35,21 +35,13 @@ fn decryptor(keyword: &str, nonces: &'static str, ciphertext: Vec<u8>) -> String
     String::from_utf8(plaintext.to_vec()).unwrap()
 }
 
-fn crypto() -> String {
-
+fn main() {
     const KEYWORD: &str = "an example very very secret key.";
     const NONCE: &'static str = "unique nonce";
-
 
     let ciphertext = encryptor(KEYWORD, NONCE, "plaintext message");
     let plaintext = decryptor(KEYWORD, NONCE, ciphertext);
 
     println!("{}", plaintext);
-
-    plaintext
-}
-
-fn main() {
-    let plaintext = crypto();
     assert_eq!(&plaintext, "plaintext message");
 }
