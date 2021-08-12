@@ -20,7 +20,7 @@ type SIV = aes_gcm_siv::aead::generic_array::GenericArray<
     >,
 >;
 
-fn generate(keyword: &str, nonces: &'static str) -> (Aes256GcmSiv, &'static SIV) {
+pub fn generate(keyword: &str, nonces: &'static str) -> (Aes256GcmSiv, &'static SIV) {
     let key = Key::from_slice(keyword.as_bytes());
     let cipher = Aes256GcmSiv::new(key);
     let nonce = Nonce::from_slice(nonces.as_bytes());
@@ -28,7 +28,7 @@ fn generate(keyword: &str, nonces: &'static str) -> (Aes256GcmSiv, &'static SIV)
     (cipher, nonce)
 }
 
-fn encryptor(keyword: &str, nonces: &'static str, data: &str) -> Vec<u8> {
+pub fn encryptor(keyword: &str, nonces: &'static str, data: &str) -> Vec<u8> {
     let generated = generate(keyword, nonces);
 
     let ciphertext = generated
@@ -41,7 +41,7 @@ fn encryptor(keyword: &str, nonces: &'static str, data: &str) -> Vec<u8> {
     ciphertext
 }
 
-fn decryptor(keyword: &str, nonces: &'static str, ciphertext: Vec<u8>) -> String {
+pub fn decryptor(keyword: &str, nonces: &'static str, ciphertext: Vec<u8>) -> String {
     let generated = generate(keyword, nonces);
 
     let plaintext = generated
@@ -52,7 +52,8 @@ fn decryptor(keyword: &str, nonces: &'static str, ciphertext: Vec<u8>) -> String
     String::from_utf8(plaintext.to_vec()).unwrap()
 }
 
-fn main() {
+#[test]
+fn test_aes_crypto() {
     const KEYWORD: &str = "an example very very secret key.";
     const NONCE: &'static str = "unique nonce";
 
